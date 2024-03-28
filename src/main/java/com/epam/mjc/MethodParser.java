@@ -25,19 +25,29 @@ public class MethodParser {
     public MethodSignature parseFunction(String signatureString) {
         String[] arr = signatureString.split(" ");
         String second = arr[2];
+        Boolean flag = false;
         if (arr[1].contains("(")) {
             second = arr[1];
+            flag = true;// access modifier have not
         }
         String methodName = second.substring(0, second.indexOf("("));
         MethodSignature methodSignature = getMethodSignature(signatureString, methodName);
-        methodSignature.setAccessModifier(arr[0]);
-        methodSignature.setReturnType(arr[1]);
+        if (flag) {
+            methodSignature.setAccessModifier(null);
+            methodSignature.setReturnType(arr[0]);
+        } else {
+            methodSignature.setAccessModifier(arr[0]);
+            methodSignature.setReturnType(arr[1]);
+        }
         return methodSignature;
     }
 
     private static MethodSignature getMethodSignature(String signatureString, String methodName) {
         List<MethodSignature.Argument> arguments = new ArrayList<>();
         String argument = signatureString.substring(signatureString.indexOf("(") + 1, signatureString.indexOf(")"));
+        if (argument.isBlank()) {
+            return new MethodSignature(methodName);
+        }
         String[] args = argument.split(", ");
         for (String arg : args) {
             String[] subArgs = arg.split(" ");

@@ -16,17 +16,20 @@ public class StringSplitter {
     public List<String> splitByDelimiters(String source, Collection<String> delimiters) {
         List<String> response = new ArrayList<>();
         char[] characters = source.toCharArray();
-        StringBuilder text = new StringBuilder();
+        String text = "";
         for (char character : characters) {
             if (delimiters.contains(character + "")) {
-                response.add(text.toString());
-                text = new StringBuilder();
+                if (!text.isEmpty()) {
+                    response.add(text);
+                    text = "";
+                }
+
             } else {
-                text.append(character);
+                text += character;
             }
         }
-        if (text.length() != 0) {
-            response.add(text.toString());
+        if (!text.isEmpty()) {
+            response.add(text);
         }
         return response;
 
